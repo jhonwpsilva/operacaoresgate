@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║   OPERAÇÃO RESGATE — ATUALIZAÇÃO GIGANTE (jogador, inimigos, mundo)    ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Unity 2022.3.40f1 · Built-in RP · 100% por código (sem prefab) · namespace OperacaoResgate
+
+──────────────────────────────────────────────────────────────────────
+COMO ABRIR
+──────────────────────────────────────────────────────────────────────
+1. Abra a pasta do projeto no Unity Hub (2022.3.40f1).
+2. O Unity vai importar e gerar os .meta dos scripts novos automaticamente
+   (a arquitetura é toda por código, então não há referência de cena/GUID
+   para quebrar).
+3. IMPORTANTE: se algo não refletir, o Unity pode estar usando o último
+   build válido. Sempre confira o Console: se houver erro VERMELHO, ele
+   ignora a mudança. Corrija o erro e rode de novo.
+
+──────────────────────────────────────────────────────────────────────
+CONTROLES
+──────────────────────────────────────────────────────────────────────
+  A / D  ............ mover            SHIFT ......... correr
+  ESPAÇO / W ........ pular (2x = duplo salto)
+  S ................. agachar          CTRL .......... rolar / esquivar (invulnerável)
+  MOUSE ............. mirar (cima / frente / baixo) — a mira abre com o recuo
+  CLIQUE / J ........ atirar           R ............. recarregar
+  Q ou 1-4 / scroll . trocar de arma   G ............. lançar granada
+  V ou F ............ faca (corpo a corpo)
+  E ................. interagir (portas, portões)
+  W/S numa escada ... escalar
+
+──────────────────────────────────────────────────────────────────────
+O QUE ENTROU (por código, funcionando em jogo)
+──────────────────────────────────────────────────────────────────────
+JOGADOR: idle, andar, correr, agachar, ROLAR (com giro + i-frames), escalar,
+  saltar, salto duplo, cair, MIRAR cima/frente/baixo, atirar, RECARREGAR,
+  TROCAR DE ARMA, LANÇAR GRANADA, FACA, receber dano, ESCUDO, morrer, respawn,
+  coletar itens, PASSOS por superfície.
+
+ARMAS (4): Pistola, Fuzil, Espingarda, Metralhadora — munição (pente+reserva),
+  recarga temporizada, RECUO (coice+tremor+dispersão dinâmica), FLASH do cano,
+  CÁPSULA ejetada com quique, TRACADOR, balística por SphereCast, dano por arma.
+
+GRANADA: física com QUIQUE, contagem regressiva (pisca/apita), explosão, dano
+  em área, partículas, som 3D, tremor de câmera.
+
+INIMIGOS (IA tática): patrulhar, campo de visão, OUVIR TIROS, perseguir com
+  espaçamento, atirar/fogo/granada/investida/corpo, ESQUIVAR, PROCURAR
+  COBERTURA (após dano), FUGIR com vida baixa, CHAMAR REFORÇOS, voltar à
+  patrulha, morrer com animação, soltar itens.
+
+ROBÔS: RoboSentinela — escaneia com facho, caminha, vira sozinho, dispara
+  laser, olho/painel luminosos, EXPLODE em cadeia ao morrer.
+
+DRONES: DroneInteligente — voo suave, patrulha, detecta, atira, DESVIA de
+  obstáculos (raycast), explode ao cair.
+
+TORRES: TorreVigia — detecta com linha de visada, gira o cano, atira, explode.
+
+OBSTÁCULOS: CAIXA empurrável (Rigidbody, destrutível), PORTA e PORTÃO
+  (abrem com E), ELEVADOR (sobe com você), COBERTURA (sacos/concreto/cerca),
+  barris explosivos, ESCADAS (com Climbable).
+
+PLATAFORMAS: móveis, ELEVATÓRIA (curva de animação), QUEBRÁVEL (racha e cai,
+  respawn), QUE CAI (despenca ao pisar, respawn).
+
+CENÁRIO/CLIMA (por fase): CHUVA, poeira, VENTO (props balançam), RAIOS+TROVÃO,
+  SOM AMBIENTE em loop, fumaça, faíscas, explosões, iluminação dinâmica.
+
+ITENS (novos): Munição, Escudo, XP, Dinheiro, Vida (+ os antigos) — todos
+  giram, flutuam, BRILHAM (luz), soltam PARTÍCULAS orbitando, tocam som e
+  somem ao coletar.
+
+HUD: barras suaves de Vida, ESCUDO e Energia; MUNIÇÃO + ARMA EQUIPADA +
+  GRANADAS com aviso de RECARGA; MIRA DINÂMICA que abre com o recuo;
+  pontuação, itens, vidas, objetivo, mini-mapa, contador de inimigos,
+  barra do chefe, barra de mini-chefe e painel do K9.
+
+CÂMERA: follow suave, SHAKE em explosões e ao levar dano, ZOOM automático
+  (recua no chefe / correndo), limites da fase, HDR ligado.
+
+ÁUDIO: música DINÂMICA (intensidade sobe no combate), PASSOS por superfície,
+  tiros, explosões, ambiente, vozes, eco (reverb) e ÁUDIO 3D posicional.
+  SFX que faltavam são gerados por código (ProceduralAudio).
+
+OTIMIZAÇÃO: 60 FPS alvo, OBJECT POOLING (FXPool) para flashes/partículas,
+  cache de sprites, carregamento otimizado.
+
+──────────────────────────────────────────────────────────────────────
+ITENS QUE DEPENDEM DO EDITOR / DE PACOTES (não dá 100% só por código)
+──────────────────────────────────────────────────────────────────────
+Estes precisam de ação no Editor ou de instalar um pacote — deixei o
+equivalente possível por código e aponto o caminho:
+
+• CINEMACHINE: a câmera atual (CameraController) já faz follow suave, shake,
+  zoom e limites. Para usar o Cinemachine de verdade: Window > Package Manager
+  > instalar "Cinemachine" e trocar por uma Virtual Camera.
+
+• BLOOM / MOTION BLUR / HDR PÓS-PROCESSAMENTO: o Built-in RP não tem isso
+  sem o pacote "Post Processing" (Package Manager). Deixei HDR ligado na
+  câmera + brilho por materiais emissivos e muitas luzes. Para bloom/motion
+  blur: instale "Post Processing" e adicione um Post-process Volume + Layer.
+
+• ADDRESSABLES: precisam do pacote "Addressables" e de marcar assets no
+  Editor. Hoje o carregamento usa Resources + cache (rápido e suficiente).
+
+• OCCLUSION CULLING / SPRITE ATLAS: são baking/configuração no Editor
+  (Window > Rendering > Occlusion Culling; e criar um Sprite Atlas).
+  Não são código; o Object Pooling e o cache já seguram o FPS.
+
+Qualquer um destes eu integro se você instalar o pacote correspondente —
+é só avisar.
