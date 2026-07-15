@@ -344,9 +344,9 @@ namespace OperacaoResgate
 
             float alvoX = player.transform.position.x + _followLado;
 
-            if (dist > 16f)
+            if (dist > 12f)
             {
-                Vector3 p = transform.position; p.x = alvoX; p.y = player.transform.position.y + 0.2f;
+                Vector3 p = transform.position; p.x = alvoX; p.y = player.transform.position.y;   // mesma linha dos pes do soldado
                 transform.position = p;
                 _stuckTimer = 0f;
                 return;
@@ -366,9 +366,12 @@ namespace OperacaoResgate
                 float passo = Mathf.Sign(dx) * vel * Time.deltaTime;
                 if (Mathf.Abs(passo) > adx) passo = dx;
                 pos.x += passo;
-                // VIRADA: so muda de lado com folga (0.9). Com 0.4 o cao chegava no alvo,
-                // passava 1 cm, virava, voltava, virava de novo — o "cao virando sem parar".
-                if (Estado != EstadoK9.Alerta && adx > 0.9f) _direita = dx > 0;
+                // OLHAR = DIREÇÃO DO MOVIMENTO REAL. Antes o olhar só atualizava com
+                // adx > 0.9 — mas seguindo o soldado a distância fica quase sempre
+                // abaixo disso, então o olhar CONGELAVA na última travessia e o cão
+                // seguia o player andando DE RÉ para sempre. Agora: se andou, olha
+                // para onde andou (0.3 de folga + debounce visual evitam tremida).
+                if (Estado != EstadoK9.Alerta && adx > 0.3f) _direita = passo > 0f;
                 _stuckTimer = 0f;
             }
             else _stuckTimer += Time.deltaTime;
@@ -389,17 +392,36 @@ namespace OperacaoResgate
                 if (col.GetComponentInParent<CompanionDog>() != null) continue;
                 if (raios[i].distance < maisPerto) { maisPerto = raios[i].distance; groundY = raios[i].point.y; achouChao = true; }
             }
-            if (!achouChao) groundY = player.transform.position.y;
 
-            float alvoY = groundY;
-            if (player.transform.position.y - groundY > 2.5f) alvoY = player.transform.position.y;
-            pos.y = Mathf.Lerp(pos.y, alvoY, 10f * Time.deltaTime);
+            // ===== ALTURA DO CÃO (patas no chão, sem flutuar) =====
+            // Geometria: o transform do cão fica na LINHA DAS PATAS, porque o sprite
+            // (_visual) já sobe _halfH a partir do transform. O soldado também tem o
+            // transform nos pés (collider com centro em altura/2). Logo, para o cão
+            // pisar no MESMO chão que o soldado, o transform.y do cão deve ir para
+            // groundY — NÃO groundY + _halfH (isso somava a meia-altura duas vezes e
+            // era o que fazia ele flutuar). Sobre um vão (sem piso), acompanha a
+            // altura dos pés do soldado em vez de travar no ar.
+            float pesSoldado = player.transform.position.y;
+            float alvoY;
+            if (achouChao)
+            {
+                alvoY = groundY;
+                if (pesSoldado - groundY > 2.5f) alvoY = pesSoldado;   // soldado subiu: sobe junto
+            }
+            else
+            {
+                alvoY = pesSoldado;   // sem piso embaixo: segue a altura do dono
+            }
+            float velY = alvoY > pos.y ? 14f : 9f;   // sobe mais rápido do que desce
+            pos.y = Mathf.Lerp(pos.y, alvoY, velY * Time.deltaTime);
 
             transform.position = pos;
 
-            if (_stuckTimer > 2.5f && dist > 5f)
+            if (_stuckTimer > 1.2f && dist > 3.5f)
             {
-                Vector3 p = transform.position; p.x = alvoX; transform.position = p; _stuckTimer = 0f;
+                Vector3 p = transform.position; p.x = alvoX;
+                p.y = player.transform.position.y;   // mesma linha dos pes do soldado
+                transform.position = p; _stuckTimer = 0f;
             }
         }
 
@@ -408,26 +430,29 @@ namespace OperacaoResgate
         private float _flipTimer;
         private void AtualizarVisual(PlayerController player)
         {
-            bool olharDesejado = (Estado == EstadoK9.Esperando || Estado == EstadoK9.Curando)
-                ? player.transform.position.x > transform.position.x
-                : _direita;
-
-            // DEBOUNCE do espelhamento: o lado desejado troca toda hora quando o estado
-            // alterna Seguindo/Esperando na fronteira de distancia — o sprite ficava
-            // "tremendo" espelhando a cada frame. So espelha se o desejo ficar estavel
-            // por 0.25s.
-            if (olharDesejado != _olharAtual)
-            {
-                _flipTimer += Time.deltaTime;
-                if (_flipTimer >= 0.25f) { _olharAtual = olharDesejado; _flipTimer = 0f; }
-            }
-            else _flipTimer = 0f;
-            bool olharDireita = _olharAtual;
-
-            // velocidade instantanea -> escolhe idle / caminhada / corrida
+            // velocidade instantanea -> escolhe idle / caminhada / corrida (e o olhar)
             float dxFrame = _ultimaX < -9000f ? 0f : Mathf.Abs(transform.position.x - _ultimaX);
             _ultimaX = transform.position.x;
             float vel = Time.deltaTime > 0f ? dxFrame / Time.deltaTime : 0f;
+            if (vel > 20f) vel = 0f;   // teleporte de reencontro não conta como corrida
+
+            // Para onde olhar:
+            //  - em ALERTA, já está virado para o inimigo (_direita setado no AtoAlerta)
+            //  - MOVENDO, olha para onde anda (_direita vem do passo em MoverSeguindo)
+            //  - PARADO, olha para o soldado — nunca fica de costas para o dono
+            bool olharDesejado = (Estado == EstadoK9.Alerta || vel > LIMIAR_ANDAR)
+                ? _direita
+                : player.transform.position.x > transform.position.x;
+
+            // DEBOUNCE do espelhamento: só espelha se o desejo ficar estável por 0.15s
+            // — absorve a tremida na fronteira dos estados sem deixar o cão "atrasado".
+            if (olharDesejado != _olharAtual)
+            {
+                _flipTimer += Time.deltaTime;
+                if (_flipTimer >= 0.15f) { _olharAtual = olharDesejado; _flipTimer = 0f; }
+            }
+            else _flipTimer = 0f;
+            bool olharDireita = _olharAtual;
 
             Sprite[] clipe = null; float fps = 0f;
             if (vel > LIMIAR_CORRER && _run != null && _run.Length > 0) { clipe = _run; fps = 13f; }
@@ -446,8 +471,9 @@ namespace OperacaoResgate
                     _animTime = 0f;
                 }
 
-                // os quadros olham para a DIREITA por padrao -> espelha para a esquerda
-                float sx = Mathf.Abs(_escala) * (olharDireita ? 1f : -1f);
+                // Os quadros do cão são desenhados olhando para a ESQUERDA por padrão.
+                // Portanto, para o cão encarar a DIREITA é que precisamos espelhar (sx < 0).
+                float sx = Mathf.Abs(_escala) * (olharDireita ? -1f : 1f);
                 float bobY = clipe == null ? Mathf.Sin(_bob * 2.2f) * 0.015f : 0f; // respiracao ao parar
                 // escala UNIFORME: com o Billboard girando o sprite em 3D, deixar o Z em
                 // 1f (enquanto X/Y usam a escala do cao) deformava/deitava o bicho.
