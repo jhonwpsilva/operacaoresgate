@@ -2,141 +2,165 @@
 
 **Jogo de plataforma de ação militar 2.5D** desenvolvido na **Unity (C#)** para a disciplina de **Game Development** do Centro Universitário **UniFECAF**.
 
-> Um soldado heroico precisa atravessar uma zona de guerra devastada, coletar suprimentos, enfrentar inimigos e máquinas de combate, e desativar o núcleo de comando inimigo na sala de controle final para concluir o resgate.
+> Um soldado de elite é enviado a uma cidade devastada por um desastre radioativo. Ao lado do **K9-CYBER ALPHA** — um pastor-alemão cibernético com inteligência artificial própria — ele precisa atravessar territórios dominados por criaturas mutantes e forças hostis até concluir a operação de resgate que dá nome ao jogo.
+
+**Pilares do projeto:** 🎯 Estratégia · 💥 Ação · 🎖️ Missão
+
+---
+
+## 🔗 Links
+
+- ▶️ **Vídeo pitch:** https://youtu.be/ZBHpeifeUcc
+- 💻 **Repositório:** https://github.com/jhonwpsilva/operacaoresgate
 
 ---
 
 ## 🎮 Sobre o jogo
 
-OPERAÇÃO RESGATE é um *side-scroller* de plataforma com visual **2.5D** (cenário e física tridimensionais com personagens em sprites), construído inteiramente em **C#**. O projeto cobre todos os pilares pedidos no trabalho:
+OPERAÇÃO RESGATE é um *run and gun* de plataforma com apresentação **2.5D**: a lógica do jogo é estritamente bidimensional, mas a cena usa câmera em perspectiva, iluminação dinâmica e paralaxe de fundo, entregando visual cinematográfico sem sacrificar a clareza espacial do gênero.
 
-- ✅ **Movimentação completa**: andar, correr, pular, **duplo salto**, agachar e escalar — com animações por troca de sprites.
-- ✅ **5 fases** com dificuldade crescente, da praia de desembarque até a sala de comando do chefe.
-- ✅ **HUD profissional**: barra de vida, barra de energia, pontuação, contador de itens, vidas, indicador de objetivo, **mini-mapa tático** e **barra de vida do chefe**.
-- ✅ **Feedback visual e sonoro**: flashes de dano, explosões com luz, partículas de coleta, e trilha sonora + efeitos sonoros originais.
-- ✅ **Inimigos variados** (soldado, drone voador, mech, veículo blindado) e um **chefe final** com ataques à distância.
-- ✅ **Telas completas**: menu inicial, seleção de fase, como jogar, pausa, fase concluída, vitória e derrota.
+- ✅ **Movimentação completa** com *game feel* calibrado: andar, correr, pular com *coyote time* e *jump buffering*, **duplo pulo**, agachar, escalar, rolamento de esquiva com invulnerabilidade e deslize com salto encadeado.
+- ✅ **Arsenal de 4 armas** orientado a dados (pistola, fuzil, espingarda e metralhadora) com balística, recuo, dispersão dinâmica, recarga temporizada e **mira livre em 360°** — além de granadas e golpe corpo a corpo.
+- ✅ **K9-CYBER ALPHA**: companheiro com IA própria que segue o soldado, combate inimigos com 3 ataques por distância, cura o parceiro ferido, evolui até o nível 10 e comunica seu estado por LED colorido.
+- ✅ **5 fases** com dificuldade crescente, culminando em batalha de chefe com padrões de ataque em fases.
+- ✅ **HUD completo**: vida, vidas, pontuação, arma e munição (pente/reserva), retículo dinâmico e painéis do K9.
+- ✅ **Feedback audiovisual abrangente**: clarão de cano, cápsulas ejetadas, tremor de câmera, faíscas, mais de 25 efeitos sonoros e trilha própria por fase.
+- ✅ **Clima dinâmico** (chuva e vento), sistema de salvamento com persistência da evolução do K9 e telas completas (menu, pausa, game over, fase concluída e vitória).
+
+---
+
+## 📸 Prints das telas e níveis
+
+*Capturas reais de gameplay (pasta [`Prints/`](Prints)).*
+
+### Menu inicial
+![Menu inicial](Prints/01_menu_inicial.png)
+
+### Fase 1 — Favela Contaminada
+![Fase 1 — Favela Contaminada](Prints/02_fase1_favela_contaminada.png)
+
+### Fase 2 — Ruínas Urbanas (chuva e plataformas móveis)
+![Fase 2 — Ruínas Urbanas](Prints/03_fase2_ruinas_urbanas.png)
+
+### Fase 3 — Campo Radioativo
+![Fase 3 — Campo Radioativo](Prints/04_fase3_campo_radioativo.png)
+
+### Fase 4 — Linha de Frente
+![Fase 4 — Linha de Frente](Prints/05_fase4_linha_de_frente.png)
+
+### Combate e HUD em ação
+![Combate e HUD](Prints/06_combate_e_hud.png)
+
+### Fase 5 — Batalha do Chefe (Sala de Comando)
+![Fase 5 — Batalha do Chefe](Prints/07_fase5_batalha_do_chefe.png)
+
+### Tela de vitória
+![Tela de vitória](Prints/08_tela_de_vitoria.png)
 
 ---
 
 ## 🕹️ Controles
 
-| Ação | Tecla |
-|------|-------|
-| Andar | `A` / `D` ou `←` / `→` |
-| Correr | segurar `Shift` |
-| Pular / Duplo salto | `Espaço` (aperte de novo no ar) |
-| Agachar | `S` ou `↓` |
-| Escalar (em escadas) | `W` / `↑` |
-| Atirar | `J` ou **clique esquerdo** |
-| Interagir | `E` |
-| Pausar | `Esc` ou `P` |
-| Confirmar nas telas | `Enter` |
+| Ação | Entrada | Ação | Entrada |
+|------|---------|------|---------|
+| Mover | `A`/`D` ou setas | Atirar | Botão esq. do mouse / `J` |
+| Correr | `Shift` | Mirar 360° | Movimento do mouse |
+| Pular / duplo pulo | `Espaço`, `W` ou `↑` | Recarregar | `R` |
+| Agachar | `S` ou `↓` | Trocar arma | `Q`, scroll ou `1`–`4` |
+| Rolamento (esquiva) | `Ctrl` esquerdo | Granada | `G` |
+| Deslize | Correr + agachar | Corpo a corpo | `V` ou `F` |
+| Escalar | `W`/`S` na escada | Interagir | `E` |
+| Pausar | `Esc` ou `P` | Confirmar | `Enter` |
 
 ---
 
 ## 🚀 Como abrir e jogar
 
 ### Pré-requisitos
-- **Unity 2022.3.40f1** (LTS) — instale pelo **Unity Hub**.
-  *Qualquer versão 2022.3.x abre o projeto normalmente; o Hub pode pedir para fazer um pequeno upgrade, basta aceitar.*
+- **Unity 2022.3.40f1 (LTS)** — instale pelo **Unity Hub**.
+  *Qualquer versão 2022.3.x abre o projeto normalmente; o Hub pode sugerir um pequeno upgrade, basta aceitar.*
 
 ### Passos
 1. Abra o **Unity Hub**.
 2. Clique em **Add** → **Add project from disk**.
-3. Selecione a pasta **`OperacaoResgate`** (esta pasta, que contém `Assets/`, `ProjectSettings/` e `Packages/`).
-4. Clique no projeto para abri-lo. *(No primeiro carregamento o Unity importa os assets e gera os arquivos `.meta` — pode levar alguns minutos.)*
-5. Na janela **Project**, abra a cena em **`Assets/Scenes/OperacaoResgate.unity`** (dê duplo clique).
-6. Aperte o botão **▶ Play** no topo do editor.
+3. Selecione a pasta **`operacaoresgate`** (a que contém `Assets/`, `ProjectSettings/` e `Packages/`).
+4. Abra o projeto. *(No primeiro carregamento a Unity importa os assets — pode levar alguns minutos.)*
+5. Na janela **Project**, abra a cena **`Assets/Scenes/OperacaoResgate.unity`**.
+6. Aperte **▶ Play**.
 
-> 💡 **O jogo se monta sozinho.** Toda a estrutura (câmera, luz, interface, fases) é criada por código em tempo de execução — não é preciso configurar nada no editor. Basta dar **Play**.
+> 💡 **O jogo se monta sozinho.** Câmera, luz, interface e as cinco fases são criadas por código em tempo de execução — não é preciso configurar nada no editor.
 
 ---
 
 ## 📦 Como gerar o executável (.exe)
 
 1. Menu **File → Build Settings…**
-2. Confirme que a cena **`Scenes/OperacaoResgate`** está na lista *Scenes In Build* (se não estiver, clique em **Add Open Scenes**).
+2. Confirme que a cena **`Scenes/OperacaoResgate`** está em *Scenes In Build* (senão, **Add Open Scenes**).
 3. Em **Platform**, selecione **Windows, Mac, Linux** e clique em **Switch Platform** se necessário.
 4. Clique em **Build**, escolha uma pasta de saída (ex.: `Build/`) e aguarde.
-5. O executável `OperacaoResgate.exe` (no Windows) será gerado na pasta escolhida, junto da pasta `OperacaoResgate_Data`.
+5. O executável `OperacaoResgate.exe` será gerado junto da pasta `OperacaoResgate_Data`.
 
-> Para distribuição, compacte a pasta de build inteira em um `.zip`.
+> Para distribuição, compacte a pasta de build inteira em um `.zip`. Guia detalhado em [`COMO_EXPORTAR_EXE.md`](COMO_EXPORTAR_EXE.md).
 
 ---
 
 ## 🗂️ Estrutura do projeto
 
 ```
-OperacaoResgate/
+operacaoresgate/
 ├── Assets/
 │   ├── Scenes/
-│   │   └── OperacaoResgate.unity        # cena inicial (vazia — tudo é montado por código)
-│   ├── Scripts/                         # 27 scripts C# (namespace OperacaoResgate)
-│   │   ├── Core/                        # configuração, gerenciadores, dados de fase
-│   │   │   ├── GameConfig.cs            # constantes e paleta de cores
-│   │   │   ├── GameBootstrap.cs         # ponto de entrada automático (monta o jogo)
-│   │   │   ├── GameManager.cs           # máquina de estados do jogo
-│   │   │   ├── LevelData.cs             # definição data-driven das 5 fases
-│   │   │   ├── SpriteLibrary.cs         # carregamento e cache de sprites
-│   │   │   └── AudioManager.cs          # trilha e efeitos sonoros
-│   │   ├── Player/                      # controle, vida e animação do soldado
-│   │   ├── World/                       # construção de fase, plataformas, itens, perigos
-│   │   ├── Enemies/                     # inimigos e chefe final
-│   │   └── UI/                          # menus, HUD, câmera e transições
-│   └── Resources/                       # assets carregados em runtime
-│       ├── Sprites/  (player, enemies, props, items, hazards)
-│       ├── Backgrounds/                 # cenários panorâmicos das fases e telas
-│       └── Audio/                       # 12 efeitos + 3 trilhas (loop)
-├── ProjectSettings/                     # versão da Unity e configurações
-└── Packages/                            # dependências (uGUI, física, áudio…)
+│   │   └── OperacaoResgate.unity   # cena inicial (tudo é montado por código)
+│   ├── Scripts/                    # +40 classes C# (namespace OperacaoResgate)
+│   │   ├── Core/                   # estado do jogo, dados das fases, áudio, save, eventos
+│   │   ├── Player/                 # controle, armas, saúde, granadas, animação
+│   │   ├── Enemies/                # zumbi, mutante, robô, drone, torre, helicóptero, chefe
+│   │   ├── World/                  # construtor de níveis, K9, plataformas, itens, clima
+│   │   └── UI/                     # HUD, retículo, painéis do K9, menus, câmera
+│   └── Resources/                  # sprites, cenários e áudio carregados em runtime
+├── Prints/                         # 📸 capturas das telas e níveis
+├── ImagensHD/                      # cenários e arte conceitual em alta resolução
+├── ProjectSettings/                # versão da Unity e configurações
+└── Packages/                       # dependências
 ```
 
 ---
 
 ## 🧩 Arquitetura técnica
 
-O projeto adota uma arquitetura **"à prova de erros"**: em vez de depender de objetos arrastados no editor (prefabs, referências no Inspector, Animator Controllers), **tudo é criado por código** em tempo de execução.
+Arquitetura **integralmente orientada a código (code-driven)**: níveis, personagens, interface, materiais e efeitos são construídos em tempo de execução a partir de uma camada declarativa de dados.
 
-- **`GameBootstrap`** usa `[RuntimeInitializeOnLoadMethod]` para montar câmera, luz, *EventSystem* e gerenciadores assim que a cena carrega.
-- **`GameManager`** é um *singleton* que controla a máquina de estados (Menu → Jogando → Pausado → Fase Completa → Vitória/Derrota) e os dados da partida (pontos, vidas, itens, fase atual).
-- **`LevelData`** descreve as 5 fases de forma *data-driven* (posições de plataformas, inimigos, itens e perigos), e **`LevelBuilder`** as constrói no mundo 3D.
-- **Animação** do personagem é feita por **troca de sprites** mapeados a partir do *sprite sheet*, sem Animator Controller.
-- **Física real** com `Rigidbody` (gravidade manual para controle preciso de pulo), personagem preso ao plano XY com profundidade em Z (efeito 2.5D).
-
-Essa abordagem garante que o jogo **funcione mesmo a partir de uma cena vazia**, eliminando a maioria dos erros de configuração.
-
----
-
-## 🎨 Identidade visual
-
-| Cor | Hex | Uso |
-|-----|-----|-----|
-| Azul Executivo | `#0F2D52` | fundos de interface |
-| Azul Premium | `#1E5AA8` | botões e destaques |
-| Dourado | `#D4A437` | título, pontuação, medalhas |
-| Verde HUD | — | barra de vida cheia, sucesso |
-| Vermelho Alerta | — | dano, chefe, derrota |
-
-Os cenários, o soldado e os elementos foram processados a partir de *packs* de arte, com remoção de fundo e recorte de *sprites*.
+- **Game loop respeitado:** entrada e timers no `Update`, física via `Rigidbody` a 50 Hz no `FixedUpdate` (com *jump buffer*), câmera e HUD no `LateUpdate`.
+- **Barramento de eventos de combate (padrão observer):** ao disparar, o jogador publica um evento; inimigos próximos "ouvem" e reagem — sem acoplamento entre classes.
+- **Orientação a dados:** armas são fichas de atributos e fases são descrições declarativas — balancear é editar números, nunca reescrever lógica.
+- **Desempenho:** *object pool* de efeitos (sem picos de GC), balística com `SphereCast`, detecção contínua de colisão e material físico sem atrito.
+- **Animação:** máquina de estados em C# com 15 estados visuais + camadas processuais (inclinação de mira ±24°, giro de rolamento, respiração do K9).
 
 ---
 
 ## 🔊 Áudio
 
-Todos os sons são **originais**, gerados proceduralmente (sem direitos autorais de terceiros):
-- **12 efeitos**: pulo, duplo salto, moeda, item, tiro, dano, aterrissagem, explosão, clique, vitória, game over e checkpoint.
-- **3 trilhas em loop**: menu, fase e batalha de chefe.
+- **Trilha própria por fase**, tratada como camada de estado (troca com a fase, silencia na derrota, celebra na vitória).
+- **Mais de 25 efeitos sonoros** sintetizados proceduralmente pelo próprio sistema — sem bancos de áudio externos.
+- **Anti-fadiga e som posicional:** variação sutil de *pitch* entre repetições e atenuação pela distância.
+
+---
+
+## 🎨 Origem dos assets
+
+- Folhas de sprites do soldado e do K9 produzidas para o projeto.
+- Primitivas, materiais, partículas e interface gerados proceduralmente por código.
+- Efeitos sonoros sintetizados pelo próprio sistema de áudio.
 
 ---
 
 ## 👤 Créditos
 
-- **Desenvolvimento:** Jônata
+- **Desenvolvimento:** Jônata Silva Pinho — RA 115533
 - **Instituição:** Centro Universitário UniFECAF
 - **Disciplina:** Game Development
-- **Engine:** Unity 2022.3 LTS · Linguagem: C#
+- **Engine:** Unity 2022.3 LTS · **Linguagem:** C#
 
 ---
 
-*Projeto acadêmico. Os efeitos sonoros são originais; a arte foi processada a partir de packs de imagens fornecidos para o trabalho.*
+*Projeto acadêmico desenvolvido como entregável da disciplina de Game Development — UniFECAF (2026).*
